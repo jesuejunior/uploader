@@ -50,7 +50,7 @@ public class Upload extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		response.setContentType("text/plain");
-		out.println("<h1>Servlet File Upload Example using Commons File Upload</h1>");
+		out.println("<h1>Uploader de arquivo</h1>");
 		out.println();
 
 		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
@@ -78,13 +78,13 @@ public class Upload extends HttpServlet {
 				 */
 				if (item.isFormField()) {
 					out.println("Nome do arquivo = " + item.getFieldName()
-							+ ", Value = " + item.getString());
+							+ ", Valor = " + item.getString());
 				} else {
 					// Handle Uploaded files.
-					out.println("Field Name = " + item.getFieldName()
-							+ ", File Name = " + item.getName()
-							+ ", Content type = " + item.getContentType()
-							+ ", File Size = " + item.getSize());
+					out.println("Nome do campo = " + item.getFieldName()
+							+ ", Nome do arquivo = " + item.getName()
+							+ ", Tipo Conteudo = " + item.getContentType()
+							+ ", Tamanho do arquivo = " + item.getSize());
 					/*
 					 * Write file to the ultimate location.
 					 */
