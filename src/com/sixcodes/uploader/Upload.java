@@ -81,8 +81,7 @@ public class Upload extends HttpServlet {
 							+ ", Valor = " + item.getString());
 				} else {
 					// Handle Uploaded files.
-					out.println("Nome do campo = " + item.getFieldName()
-							+ ", Nome do arquivo = " + item.getName()
+					out.println("Nome do arquivo = " + item.getName()
 							+ ", Tipo Conteudo = " + item.getContentType()
 							+ ", Tamanho do arquivo = " + item.getSize());
 					/*
