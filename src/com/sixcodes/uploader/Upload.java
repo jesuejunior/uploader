@@ -21,7 +21,7 @@ public class Upload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String DIRETORIO_TEMP = "/tmp/";
 	private File tmpDir;
-	private static final String DIRETORIO_DESTINO = "/files";
+	private static final String DIRETORIO_DESTINO = "files/";
 	private File destinoDir;
 
 	public Upload() {
@@ -32,13 +32,12 @@ public class Upload extends HttpServlet {
 		super.init(config);
 		tmpDir = new File(DIRETORIO_TEMP);
 		if (!tmpDir.isDirectory()) {
-			throw new ServletException(DIRETORIO_TEMP
-					+ " Não é um diretorio valido");
+			throw new ServletException(DIRETORIO_TEMP + " Não é um diretorio valido");
 		}
 		String realPath = getServletContext().getRealPath(DIRETORIO_DESTINO);
 		destinoDir = new File(realPath);
 		if (!destinoDir.isDirectory()) {
-			throw new ServletException(DIRETORIO_DESTINO + " não é diretorio valido");
+			throw new ServletException(DIRETORIO_DESTINO + " não é um diretorio valido");
 		}
 	}
 
@@ -55,47 +54,39 @@ public class Upload extends HttpServlet {
 
 		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 		/*
-		 * Set the size threshold, above which content will be stored on disk.
+		 * Colocar o tamanho maximo do arquivo para upload
 		 */
-		fileItemFactory.setSizeThreshold(1000 * 1024 * 1024); // 1 GB
+		fileItemFactory.setSizeThreshold(20000 * 1024 * 1024); // 2 GB
 		/*
-		 * Set the temporary directory to store the uploaded files of size above
-		 * threshold.
+		 * Diretorio temporario do upload do arquivo.
 		 */
 		fileItemFactory.setRepository(tmpDir);
 
 		ServletFileUpload uploadHandler = new ServletFileUpload(fileItemFactory);
 		try {
-			/*
-			 * Parse the request
-			 */
 			List<?> items = uploadHandler.parseRequest(request);
 			Iterator<?> itr = items.iterator();
 			while (itr.hasNext()) {
 				FileItem item = (FileItem) itr.next();
-				/*
-				 * Handle Form Fields.
-				 */
+
 				if (item.isFormField()) {
 					out.println("Nome do arquivo = " + item.getFieldName()
 							+ ", Valor = " + item.getString());
 				} else {
-					// Handle Uploaded files.
+					// Dados do arquivo 
 					out.println("Nome do arquivo = " + item.getName()
 							+ ", Tipo Conteudo = " + item.getContentType()
 							+ ", Tamanho do arquivo = " + item.getSize());
-					/*
-					 * Write file to the ultimate location.
-					 */
+
 					File file = new File(destinoDir, item.getName());
 					item.write(file);
 				}
 				out.close();
 			}
 		} catch (FileUploadException ex) {
-			log("Error encountered while parsing the request", ex);
+			log("Erro encontrado enquanto executava o request", ex);
 		} catch (Exception ex) {
-			log("Error encountered while uploading file", ex);
+			log("Erro encontrado enquanto executava o upload", ex);
 		}
 	}
 
