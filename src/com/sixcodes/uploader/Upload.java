@@ -21,7 +21,7 @@ public class Upload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String DIRETORIO_TEMP = "/tmp/";
 	private File tmpDir;
-	private static final String DIRETORIO_DESTINO = "files/";
+	private static final String DIRETORIO_DESTINO = "/files";
 	private File destinoDir;
 
 	public Upload() {
@@ -34,7 +34,7 @@ public class Upload extends HttpServlet {
 		if (!tmpDir.isDirectory()) {
 			throw new ServletException(DIRETORIO_TEMP + " Não é um diretorio valido");
 		}
-		String realPath = getServletContext().getRealPath(DIRETORIO_DESTINO);
+		String realPath = DIRETORIO_DESTINO;
 		destinoDir = new File(realPath);
 		if (!destinoDir.isDirectory()) {
 			throw new ServletException(DIRETORIO_DESTINO + " não é um diretorio valido");
@@ -56,7 +56,7 @@ public class Upload extends HttpServlet {
 		/*
 		 * Colocar o tamanho maximo do arquivo para upload
 		 */
-		fileItemFactory.setSizeThreshold(20000 * 1024 * 1024); // 2 GB
+		fileItemFactory.setSizeThreshold(200000 * 1024 * 1024); // 2 GB
 		/*
 		 * Diretorio temporario do upload do arquivo.
 		 */
@@ -70,16 +70,17 @@ public class Upload extends HttpServlet {
 				FileItem item = (FileItem) itr.next();
 
 				if (item.isFormField()) {
-					out.println("Nome do arquivo = " + item.getFieldName()
-							+ ", Valor = " + item.getString());
+					out.println("Nome do arquivo = " + item.getFieldName() + ", Valor = " + item.getString());
 				} else {
-					// Dados do arquivo 
-					out.println("Nome do arquivo = " + item.getName()
-							+ ", Tipo Conteudo = " + item.getContentType()
-							+ ", Tamanho do arquivo = " + item.getSize());
-
+					// Dados do arquivo
+					//String arquivo = IOUtils.toString(item.getInputStream()); //exibe conteudo do arquivo ou coloca para download
+					out.println("Nome do arquivo = " + item.getName() + ", Tipo Conteudo = " + item.getContentType() + ", Tamanho do arquivo = " + item.getSize());
 					File file = new File(destinoDir, item.getName());
 					item.write(file);
+					for (File f: destinoDir.listFiles()){
+						
+						out.println(f.getName());
+					}
 				}
 				out.close();
 			}
