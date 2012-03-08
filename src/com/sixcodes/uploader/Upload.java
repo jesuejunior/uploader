@@ -21,8 +21,8 @@ public class Upload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String DIRETORIO_TEMP = "/tmp/";
 	private File tmpDir;
-	private static final String DIRETORIO_DESTINO = "/files";
-	private File destinoDir;
+	public static final String DIRETORIO_DESTINO = "/files";
+	public File destinoDir;
 
 	public Upload() {
 		super();
@@ -77,10 +77,9 @@ public class Upload extends HttpServlet {
 					out.println("Nome do arquivo = " + item.getName() + ", Tipo Conteudo = " + item.getContentType() + ", Tamanho do arquivo = " + item.getSize());
 					File file = new File(destinoDir, item.getName());
 					item.write(file);
-					for (File f: destinoDir.listFiles()){
-						
-						out.println(f.getName());
-					}
+					
+					//response.sendRedirect(request.getContextPath() + "/List");
+					
 				}
 				out.close();
 			}
