@@ -39,4 +39,11 @@ public class Query {
 		return this;
 	}
 
+	public Query and(String and) {
+		this.query.append(" AND ");
+		this.query.append(and);
+		this.query.append(" ");
+		return this;
+	}
+
 }

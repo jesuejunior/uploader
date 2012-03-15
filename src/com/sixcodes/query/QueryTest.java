@@ -57,5 +57,25 @@ public class QueryTest {
 		q.select("nome").from("arquivo").where("id = 10");
 		assertEquals("SELECT nome FROM arquivo  WHERE id = 10", q.toSql());
 	}
+	
+	@Test
+	public void and(){
+		q.and("tamanho > 10");
+		assertEquals(" AND tamanho > 10 ", q.toSql());
+	}
+
+	@Test
+	public void andDuplo(){
+		q.and("tamanho > 10").and("id < 10");
+		assertEquals(" AND tamanho > 10  AND id < 10 ", q.toSql());
+	}
+
+	@Test
+	public void andCompleto(){
+		q.select("nome", "tamanho").from("arquivo").where("tamanho > 10").and("id > 10").and("id < 20");
+		assertEquals("SELECT nome, tamanho FROM arquivo  WHERE tamanho > 10 AND id > 10  AND id < 20 ", q.toSql());
+	}
+	
+	
 
 }
