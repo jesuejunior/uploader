@@ -69,18 +69,12 @@ public class Upload extends HttpServlet {
 			while (itr.hasNext()) {
 				FileItem item = (FileItem) itr.next();
 
-				if (item.isFormField()) {
-					out.println("Nome do arquivo = " + item.getFieldName() + ", Valor = " + item.getString());
-				} else {
-					// Dados do arquivo
-					//String arquivo = IOUtils.toString(item.getInputStream()); //exibe conteudo do arquivo ou coloca para download
-					out.println("Nome do arquivo = " + item.getName() + ", Tipo Conteudo = " + item.getContentType() + ", Tamanho do arquivo = " + item.getSize());
+				
 					File file = new File(destinoDir, item.getName());
 					item.write(file);
 					
-					//response.sendRedirect(request.getContextPath() + "/List");
+					response.sendRedirect(request.getContextPath() + "/Listar");
 					
-				}
 				out.close();
 			}
 		} catch (FileUploadException ex) {

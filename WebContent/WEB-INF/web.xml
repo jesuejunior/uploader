@@ -24,4 +24,14 @@
     <servlet-name>List</servlet-name>
     <url-pattern>/List</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Listar</display-name>
+    <servlet-name>Listar</servlet-name>
+    <servlet-class>com.sixcodes.uploader.Listar</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Listar</servlet-name>
+    <url-pattern>/Listar</url-pattern>
+  </servlet-mapping>
 </web-app>
