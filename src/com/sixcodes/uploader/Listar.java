@@ -42,19 +42,22 @@ public class Listar extends HttpServlet {
 			Statement st = connection.createStatement();
 			ResultSet nm = st.executeQuery("SELECT * FROM arquivo");
 			out.println(" <html>");
-			out.println(" <center><h2> Listagem de arquivo </h2></center>");
+			out.println(" <center><h2> Listagem de arquivo </h2>");
 			out.println(" <table border=1>");
 			out.println(" <tr>");
-			out.println(" <td>Nome</td>");
-			out.println(" <td>Tamanho</td>");
+			out.println(" <td><center><b>Nome</b></center></td>");
+			out.println(" <td><center><b>Tamanho</b></center></td>");
 			out.println(" </tr>");
+			out.println("</center>");
 			
 			// Mostra o nome e tamanho do arquivo
 			while(nm.next()){
+				out.println("<center>");
 				out.println(" <tr>");
-				out.println(" <td>" + nm.getString("nome") + "</td>");
-				out.println(" <td>" + nm.getString("tamanho") + "</td>");
+				out.println(" <td>"  + "&nbsp" +  nm.getString("nome") + "&nbsp" + "</td>");
+				out.println(" <td>" + "&nbsp" +  nm.getString("tamanho") + "&nbsp" + "</td>");
 				out.println(" </tr>");
+				out.println("</center>");
 			}
 
 			// finaliza a pagina
