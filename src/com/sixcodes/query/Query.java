@@ -33,4 +33,10 @@ public class Query {
 		return this;
 	}
 
+	public Query where(String where) {
+		this.query.append(" WHERE ");
+		this.query.append(where);
+		return this;
+	}
+
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+
 public class QueryTest {
 	
 	
@@ -45,5 +46,16 @@ public class QueryTest {
 		assertEquals("SELECT id, nome, tamanho FROM arquivo ", q.toSql());
 	}
 	
+	@Test
+	public void where(){
+		q.where("id = 10");
+		assertEquals(" WHERE id = 10", q.toSql());
+	}
+
+	@Test
+	public void whereCompleto(){
+		q.select("nome").from("arquivo").where("id = 10");
+		assertEquals("SELECT nome FROM arquivo  WHERE id = 10", q.toSql());
+	}
 
 }
