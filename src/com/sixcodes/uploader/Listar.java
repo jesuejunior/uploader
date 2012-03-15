@@ -1,6 +1,5 @@
 package com.sixcodes.uploader;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -41,10 +40,7 @@ public class Listar extends HttpServlet {
 		Connection connection = Conectar.getConnection();
 		try {
 			Statement st = connection.createStatement();
-			ResultSet nm = st.executeQuery("SELECT nome FROM arquivo where id = 1");
-			nm.first();
-			String nome = nm.getString(1);
-			
+			ResultSet nm = st.executeQuery("SELECT * FROM arquivo");
 			out.println(" <html>");
 			out.println(" <center><h2> Listagem de arquivo </h2></center>");
 			out.println(" <table border=1>");
@@ -52,12 +48,14 @@ public class Listar extends HttpServlet {
 			out.println(" <td>Nome</td>");
 			out.println(" <td>Tamanho</td>");
 			out.println(" </tr>");
+			
 			// Mostra o nome e tamanho do arquivo
-
-			out.println(" <tr>");
-			out.println(" <td>" + nome + "</td>");
-			out.println(" <td></td>");
-			out.println(" </tr>");
+			while(nm.next()){
+				out.println(" <tr>");
+				out.println(" <td>" + nm.getString("nome") + "</td>");
+				out.println(" <td>" + nm.getString("tamanho") + "</td>");
+				out.println(" </tr>");
+			}
 
 			// finaliza a pagina
 			out.println(" </table>");
