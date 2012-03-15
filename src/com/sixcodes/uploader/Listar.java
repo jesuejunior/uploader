@@ -29,6 +29,14 @@ public class Listar extends HttpServlet {
 		// TODO Auto-generated constructor stub
 	}
 
+	private String convertToMb(int bytes) {
+		if (bytes < 1024) {
+			return Integer.toString(bytes)+ " Kb";
+		} else {
+			return Integer.toString(((bytes / 1024) / 1024)) + " Mb";
+		}
+	}
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
@@ -49,13 +57,13 @@ public class Listar extends HttpServlet {
 			out.println(" <td><center><b>Tamanho</b></center></td>");
 			out.println(" </tr>");
 			out.println("</center>");
-			
+
 			// Mostra o nome e tamanho do arquivo
-			while(nm.next()){
+			while (nm.next()) {
 				out.println("<center>");
 				out.println(" <tr>");
-				out.println(" <td>"  + "&nbsp" +  nm.getString("nome") + "&nbsp" + "</td>");
-				out.println(" <td>" + "&nbsp" +  nm.getString("tamanho") + "&nbsp" + "</td>");
+				out.println(" <td>" + "&nbsp" + nm.getString("nome") + "&nbsp" + "</td>");
+				out.println(" <td>"	+ "&nbsp" + this.convertToMb(Integer.valueOf(nm.getString("tamanho"))) + "&nbsp" + "</td>");
 				out.println(" </tr>");
 				out.println("</center>");
 			}
