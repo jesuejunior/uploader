@@ -3,6 +3,10 @@ package com.sixcodes.uploader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,6 +20,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import com.sixcodes.dao.Conectar;
 
 public class Upload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -49,14 +55,14 @@ public class Upload extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		response.setContentType("text/plain");
-		out.println("<h1>Uploader de arquivo</h1>");
-		out.println();
-
+		
+		Connection connection = Conectar.getConnection(); //String de conexao SQL
+				
 		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 		/*
 		 * Colocar o tamanho maximo do arquivo para upload
 		 */
-		fileItemFactory.setSizeThreshold(200000 * 1024 * 1024); // 2 GB
+		fileItemFactory.setSizeThreshold(2000 * 1024 * 1024); // 2 GB
 		/*
 		 * Diretorio temporario do upload do arquivo.
 		 */
@@ -72,6 +78,9 @@ public class Upload extends HttpServlet {
 				
 					File file = new File(destinoDir, item.getName());
 					item.write(file);
+					Statement st = connection.createStatement();
+					
+					int ok = st.executeUpdate(String.format("INSERT INTO arquivo (nome,caminho,tamanho) VALUES(\"%s\", \"%s\", %d)", item.getName(),file.getAbsolutePath(), item.getSize()));
 					
 					response.sendRedirect(request.getContextPath() + "/Listar");
 					
@@ -81,7 +90,7 @@ public class Upload extends HttpServlet {
 			log("Erro encontrado enquanto executava o request", ex);
 		} catch (Exception ex) {
 			log("Erro encontrado enquanto executava o upload", ex);
-		}
+		} 
 	}
 
 }

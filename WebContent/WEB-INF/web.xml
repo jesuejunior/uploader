@@ -14,16 +14,7 @@
     <servlet-name>Upload</servlet-name>
     <url-pattern>/Upload</url-pattern>
   </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>List</display-name>
-    <servlet-name>List</servlet-name>
-    <servlet-class>com.sixcodes.uploader.List</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>List</servlet-name>
-    <url-pattern>/List</url-pattern>
-  </servlet-mapping>
+  
   <servlet>
     <description></description>
     <display-name>Listar</display-name>
