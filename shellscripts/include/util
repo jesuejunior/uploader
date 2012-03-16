@@ -1,0 +1,122 @@
+#!/bin/bash
+
+#
+#
+# Arquivo Utilitario com as funcoes de uso comum
+#
+#
+
+#Constantes
+
+ESC_START="\\033[1;"
+ESC_END="\\033[m"
+
+COLOR_RED="31m"
+
+# Nome da tabela que guarda o numero do ultimo script rodado
+TABELA_MIGRACAO="migracao"
+
+# Cria a tabela migracao caso ela ainda nao exista!
+CRIA_TABELA="CREATE TABLE IF NOT EXISTS ${TABELA_MIGRACAO} (numeroScriptRodado VARCHAR(20) NOT NULL, dataHora VARCHAR(20) NOT NULL) ENGINE = InnoDB;"
+
+#Másraca usada no printf para gerar o nome correto
+#dos scripts. A parte numérica deve sempre ter 3 dígitos
+# 
+# Quando os scripts ultrapassarem a _barreira_ do 1000 essa
+# máscara deverá ser alterada para %04d e *todos* os script devem
+# ser renomeados para ter a _parte numerica do nome_ com 4 dígitos.
+MASK_PRINTF="%03d"
+
+PASTA_SCRIPTS="`dirname $0`/../sql/scripts"
+
+#
+#Retorna a data atual no formato AAAAMMDDTHHMMSS
+#
+function data_atual(){
+ echo `date +%Y%m%dT%H%M%S`
+}
+
+
+#
+# Verifica se os scrips desejados realmente existem
+# Rece dois parametros: $inicio e $fim e faz a conferencia
+# de todos os scripts.
+# Não retona nada, apenas exibe a mensagem de erro e dá "exit 1"
+#
+function confere_existencia_scripts(){
+  echo -n "Conferindo scripts SQL (${1} => ${2}): " > /dev/stderr
+  for script in `seq ${1} ${2}`; do
+	  nome_script="script`printf %03d $script`.sql"
+    existe_script_sql ${script}
+	  [[ "$?" -gt 0 ]] && echo "falhou" && echo "script $nome_script nao existe!" && exit 1;
+  done 
+  echo "ok" > /dev/stderr
+}
+
+
+#
+# Verifica a existência de um script SQL de migração de banco
+# Retorna 0 se o arquivo existe e >0 caso contrário
+#
+function existe_script_sql(){
+  scriptname="script`printf ${MASK_PRINTF} ${1}`.sql"
+  filename="${PASTA_SCRIPTS}/${scriptname}"
+  [[ -f $filename ]]
+}
+
+#
+# Retorna o número do último script encontrado na pasta
+# de Scripts SQL. Retorna apenas o número do script.
+# ex: script240.sql => 240
+#
+function num_ultimo_script(){
+  ultimo=`ls -1 --color=no ${PASTA_SCRIPTS}/*.sql | tail -1 | grep -oE "[0-9]+"`
+  echo ${ultimo}
+}
+
+function caminho_completo_script(){
+ echo "${PASTA_SCRIPTS}/script`printf ${MASK_PRINTF} ${1}`.sql"
+}
+
+
+#
+# Verifica se um determinado banco de dados possui a tabela
+# que armazena o numero do último script que foi rodado.
+# Recebe 3 parametros:
+# <banco> <usuario> <senha>
+# Chama exit 1 caso ocorra erro no SQL.
+#
+function possui_tabela_migracao(){
+  bd=${1}
+  user=${2}
+  passwd=${3}
+
+  echo "show tables" | mysql -u${user} -p${passwd} ${bd} | grep "${TABELA_MIGRACAO}" > /dev/null
+  return $?
+}
+
+
+#
+# Retorna a query necessária para atualizar
+# a tabela 'migracao', colocando o numero
+# do ultimo script rodado.
+# Recebe o numero do script, banco, usuario, senha
+#
+function query_atualiza_migracao(){
+  echo "insert into ${TABELA_MIGRACAO} set numeroScriptRodado = '`printf ${MASK_PRINTF} ${1}`', dataHora = '`data_atual`';"
+}
+
+
+function cok(){
+  echo ""  
+}
+
+function cwarn(){
+  echo ""
+}
+
+function cerror(){
+  echo -e "${ESC_START}${COLOR_RED} ${1} ${ESC_END} "
+}
+
+

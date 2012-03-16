@@ -1,0 +1,126 @@
+#!/bin/bash
+
+#Inclui as funcões de uso comum e declaração de constantes 
+source `dirname $0`/include/util
+
+#$1 banco onde serao rodados os scripts
+#$3 script inicial
+#$4 script final
+
+function ajuda(){
+  echo "uso: $0 <banco> [inicio] [final]"
+  exit 1
+}
+
+function erro(){
+  echo $1;
+  ajuda
+}
+
+function rollback(){
+  cerror "*** ABORTANDO ATUALIZACAO ***"
+  echo "Aguardando 10s para restaurar o backup"
+  sleep 10
+  echo "drop database $banco"
+  echo "drop database $banco" | mysql -u$USUARIO -p$SENHA
+  [[ $? -gt 0 ]] && echo "Erro apagando banco $banco" && exit 1
+  
+  echo "Recriando banco $banco"
+  echo "create database $banco" | mysql -u$USUARIO -p$SENHA
+  [[ $? -gt 0 ]] && echo "Erro criando banco $banco" && exit 1
+ 
+  echo "Restaurando backup $ARQUIVO_BACKUP para o banco $banco"
+  cp $ARQUIVO_BACKUP tmp
+  time mysql -u$USUARIO -p$SENHA --default-character-set=utf8 -D$banco < tmp
+  [[ $? -gt 0 ]] && echo "Erro restaurando backup $ARQUIVO_BACKUP" && exit 1
+  
+  echo "***"
+  rm -f tmp
+
+  exit 1;
+
+}
+
+PASTA_BACKUP=${PASTA_BACKUP:-"bancos"}
+
+[[ ! -d ${PASTA_BACKUP} ]] && mkdir ${PASTA_BACKUP}
+
+
+USUARIO=${USUARIO:-"pcp"}
+SENHA=${SENHA:-""}
+
+
+banco=$1
+
+[[ ! -z $banco ]] || erro "Falta indicar banco de dados que recebera os scripts";
+
+ARQUIVO_BACKUP=${PASTA_BACKUP}/${banco}_`data_atual`.sql
+
+[[ -z $SENHA ]] && echo -n "Entre com a senha do banco de dados ${banco} para o usuario $USUARIO: " && read -s SENHA
+
+
+# Depois que todos os sistemas estiverem _após_ o script 243
+# essa linha *deverá* ser removida.
+echo ${CRIA_TABELA} | mysql -u $USUARIO -p$SENHA -D$banco
+
+
+if [ -z $2 ]
+then
+	inicio=$(mysql -u ${USUARIO} -p${SENHA} ${banco} -sN -e "SELECT numeroScriptRodado + 1 FROM migracao m order by numeroScriptRodado desc limit 1")
+else
+	inicio=$2
+fi
+
+ULTIMO_SCRIPT=`num_ultimo_script`
+
+final=${3:-$ULTIMO_SCRIPT}
+
+
+[[ $# -gt 3 ]] && ajuda
+
+
+[[ ! -z $inicio ]] || erro "Falta indicao o primeiro script que será rodado";
+[[ ! -z ${final} ]] || erro "Falta indicao o último script que será rodado";
+
+
+[[ -d $PASTA_SCRIPTS ]] || erro "A Pasta $PASTA_SCRIPTS nao existe"
+
+confere_existencia_scripts ${inicio} ${final}
+
+echo "Pressione Enter para continuar ou CTRL + C para abortar."
+read $line
+
+
+echo ""
+echo "criando backup de $banco em $ARQUIVO_BACKUP..."
+mysqldump -u $USUARIO -p$SENHA --default-character-set=utf8 $banco > $ARQUIVO_BACKUP
+
+[[ $? -gt 0 ]] && echo "Falha no backup, abortando..." && rm -f $ARQUIVO_BACKUP && exit 1;
+
+echo "Backup feito com sucesso!, continuando..."
+
+
+for script in `seq $inicio $final`; do
+  nome_script=`caminho_completo_script ${script}`
+  echo -n ">>> ${script} " 
+  mysql --default-character-set=utf8 -u $USUARIO -p$SENHA -D$banco < ${nome_script}
+  [[ $? -gt 0 ]] && rollback
+
+  echo "ok!"
+
+#  possui_tabela_migracao ${banco} ${USUARIO} ${SENHA}
+#  if [ "$?" -eq 0 ];then
+    query=`query_atualiza_migracao ${script}`
+    echo ${query} | mysql --default-character-set=utf8 -u ${USUARIO} -p${SENHA} -D${banco}
+    [[ $? -gt 0 ]] && rollback
+#  fi
+
+
+done
+
+
+
+
+
+
+
