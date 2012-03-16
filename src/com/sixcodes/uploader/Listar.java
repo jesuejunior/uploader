@@ -18,6 +18,9 @@ import com.sixcodes.dao.Conectar;
  * Servlet implementation class Listar
  */
 public class Listar extends HttpServlet {
+	private static final int KB = 1024;
+	private static final int MB = KB*KB;
+	private static final int GB = MB*KB;
 	private static final long serialVersionUID = 1L;
 	Upload listaUpload = new Upload();
 
@@ -30,10 +33,12 @@ public class Listar extends HttpServlet {
 	}
 
 	private String convertToMb(int bytes) {
-		if (bytes < 1024) {
-			return Integer.toString(bytes)+ " Kb";
-		} else {
-			return Integer.toString(((bytes / 1024) / 1024)) + " Mb";
+		if (bytes < KB) {
+			return Integer.toString(bytes)+ " bytes";
+		} else if(bytes < GB){
+			return Integer.toString(bytes / MB) + " Mb";
+		}else{
+			return Integer.toString(bytes / GB) + " Gb";
 		}
 	}
 
