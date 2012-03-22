@@ -8,6 +8,8 @@
 <title>Uploader by JesueJunior</title>
 </head>
 <body>
+
+<div class="container">
 <form class="well" action="Upload" enctype="multipart/form-data" method="post">
 	<center>
 		<header>
@@ -22,6 +24,7 @@
 <center>
 	<a href="Listar" class="btn btn-primary">Listar arquivos</a>
 </center>
+</div>
 
 </body>
 </html>
