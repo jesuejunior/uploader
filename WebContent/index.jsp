@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -7,24 +7,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Uploader by JesueJunior</title>
 </head>
-<body>
+<body style="margin-top:60px;">
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a href="#" class="brand">Uploader v1.0</a>
+			</div>
+		</div>
 
-<div class="container">
-<form class="well" action="Upload" enctype="multipart/form-data" method="post">
-	<center>
-		<header>
-			<h3>Uploader v 0.1</h3>
-		</header>
-
-		<input class ="span3" type="file" name="Selecione o arquivo"><br> 
-		<input class="btn btn-success" type="submit" value="Upload">&nbsp;
-	</center>
-</form>
-
-<center>
-	<a href="Listar" class="btn btn-primary">Listar arquivos</a>
-</center>
-</div>
-
+	</div>
+	<div class="container">
+		<form class="well" action="Upload" enctype="multipart/form-data"
+			method="post">
+			<input class="span3" type="file" name="Selecione o arquivo"><br>
+			<input class="btn btn-success" type="submit" value="Upload">&nbsp;
+			<a href="Listar" class="btn btn-primary pull-right">Listar arquivos</a>
+		</form>
+	</div>
 </body>
 </html>
