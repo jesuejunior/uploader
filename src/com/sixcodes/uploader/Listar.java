@@ -32,7 +32,7 @@ public class Listar extends HttpServlet {
 		// TODO Auto-generated constructor stub
 	}
 
-	private String convertToMb(int bytes) {
+	public String convertToMb(int bytes) {
 		if (bytes < KB) {
 			return Integer.toString(bytes)+ " bytes";
 		} else if(bytes < GB){

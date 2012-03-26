@@ -37,13 +37,13 @@ public class Upload extends HttpServlet {
 		tmpDir = new File(DIRETORIO_TEMP);
 		if (!tmpDir.isDirectory()) {
 			throw new ServletException(DIRETORIO_TEMP
-					+ " Não é um diretorio valido");
+					+ " N��o �� um diretorio valido");
 		}
 		String realPath = DIRETORIO_DESTINO;
 		destinoDir = new File(realPath);
 		if (!destinoDir.isDirectory()) {
 			throw new ServletException(DIRETORIO_DESTINO
-					+ " não é um diretorio valido");
+					+ " n��o �� um diretorio valido");
 		}
 	}
 
@@ -80,12 +80,9 @@ public class Upload extends HttpServlet {
 				item.write(file);
 				Statement sql = connection.createStatement();
 
-				sql.executeUpdate(String
-						.format("INSERT INTO arquivo (nome,caminho,tamanho) VALUES(\"%s\", \"%s\", %d)",
-								item.getName(), file.getAbsolutePath(),
-								item.getSize()));
+				sql.executeUpdate(String.format("INSERT INTO arquivo (nome,caminho,tamanho) VALUES(\"%s\", \"%s\", %d)",item.getName(), file.getAbsolutePath(),item.getSize()));
 
-				response.sendRedirect(request.getContextPath() + "/Listar");
+				response.sendRedirect(request.getContextPath() + "/listar.jsp");
 
 				out.close();
 			}
