@@ -4,9 +4,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<link href="static/css/bootstrap.min.css" rel="stylesheet">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
-<body>
+<body style="margin-top:60px;">
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a href="#" class="brand">Uploader v1.0</a>
+			</div>
+		</div>
+
+	</div>
 	<%@ page import="java.io.IOException"%>
 	<%@ page import="java.io.PrintWriter"%>
 	<%@ page import="java.sql.Connection"%>
@@ -22,6 +31,7 @@
 	<%@ page import="com.sixcodes.dao.Conectar"%>
 
 	<%	
+	
 		Listar listar = new Listar();
 		//PrintWriter out = response.getWriter();
 
@@ -30,7 +40,8 @@
 			Statement st = connection.createStatement();
 			ResultSet nm = st.executeQuery("SELECT * FROM arquivo");
 			out.println(" <html>");
-			out.println(" <center><h2> Listagem de arquivo </h2>");
+			out.println("<u1 class=\"nav nav-tabs nav-stacked\">");
+			out.println(" <center><h2> Lista de arquivos </h2>");
 			out.println(" <table border=1>");
 			out.println(" <tr>");
 			out.println(" <td><center><b>Nome</b></center></td>");
@@ -42,16 +53,14 @@
 			while (nm.next()) {
 				out.println("<center>");
 				out.println(" <tr>");
-				out.println(" <td>" + "&nbsp" + nm.getString("nome")
-						+ "&nbsp" + "</td>");
-				out.println(" <td>"
-						+ "&nbsp"
-						+ listar.convertToMb(Integer.valueOf(nm.getString("tamanho"))) + "&nbsp" + "</td>");
+				out.println(" <td>" + "&nbsp" + nm.getString("nome")+ "&nbsp" + "</td>");
+				out.println(" <td>"	+ "&nbsp"+ listar.convertToMb(Integer.valueOf(nm.getString("tamanho"))) + "&nbsp" + "</td>");
 				out.println(" </tr>");
 				out.println("</center>");
 			}
 
 			// finaliza a pagina
+			out.println("</u1>");
 			out.println(" </table>");
 			out.println(" </html>");
 
