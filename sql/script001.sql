@@ -1,9 +1,7 @@
-CREATE TABLE `migracao` (
-  `id` INTEGER  NOT NULL AUTO_INCREMENT,
-  `script` VARCHAR(10)  NOT NULL,
-  `data` DATETIME  NOT NULL,
-  PRIMARY KEY (`id`)
-)
-ENGINE = InnoDB;
-
-INSERT INTO migracao (script,data) VALUES('001',CURDATE());
+CREATE TABLE migracao(
+	id serial NOT NULL,
+	script VARCHAR(10) NOT NULL,
+	data timestamp NOT NULL,
+	PRIMARY KEY(id)
+);	
+INSERT INTO migracao (script,data) VALUES('001',now());
