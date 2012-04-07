@@ -3,8 +3,6 @@ package com.sixcodes.uploader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,7 +17,8 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.sixcodes.dao.Conectar;
+import com.sixcodes.dao.HibernateUtil;
+
 
 public class Upload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -27,7 +26,9 @@ public class Upload extends HttpServlet {
 	private File tmpDir;
 	public static final String DIRETORIO_DESTINO = "/files";
 	public File destinoDir;
-
+	
+	
+	
 	public Upload() {
 		super();
 	}
@@ -36,14 +37,12 @@ public class Upload extends HttpServlet {
 		super.init(config);
 		tmpDir = new File(DIRETORIO_TEMP);
 		if (!tmpDir.isDirectory()) {
-			throw new ServletException(DIRETORIO_TEMP
-					+ " N��o �� um diretorio valido");
+			throw new ServletException(DIRETORIO_TEMP + " Nao e um diretorio valido");
 		}
 		String realPath = DIRETORIO_DESTINO;
 		destinoDir = new File(realPath);
 		if (!destinoDir.isDirectory()) {
-			throw new ServletException(DIRETORIO_DESTINO
-					+ " n��o �� um diretorio valido");
+			throw new ServletException(DIRETORIO_DESTINO + " nao e um diretorio valido");
 		}
 	}
 
@@ -56,8 +55,7 @@ public class Upload extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		response.setContentType("text/plain");
 
-		Connection connection = Conectar.getConnection(); // String de conexao
-															// SQL
+		//Connection connection = Conectar.getConnection(); // String de conexao
 
 		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 		/*
@@ -78,9 +76,15 @@ public class Upload extends HttpServlet {
 
 				File file = new File(destinoDir, item.getName());
 				item.write(file);
-				Statement sql = connection.createStatement();
-
-				sql.executeUpdate(String.format("INSERT INTO arquivo (nome,caminho,tamanho) VALUES(\"%s\", \"%s\", %d)",item.getName(), file.getAbsolutePath(),item.getSize()));
+				
+				Arquivo arquivo = new Arquivo();
+				arquivo.setNome(item.getName());
+				arquivo.setCaminho(file.getAbsolutePath());
+				arquivo.setTamanho(item.getSize());
+				
+				HibernateUtil.salvarOuAtualizar(arquivo);
+				//Statement sql = connection.createStatement();
+				//sql.executeUpdate(String.format("INSERT INTO arquivo (nome,caminho,tamanho) VALUES(\"%s\", \"%s\", %d)",item.getName(), file.getAbsolutePath(),item.getSize()));
 
 				response.sendRedirect(request.getContextPath() + "/listar.jsp");
 
@@ -93,4 +97,9 @@ public class Upload extends HttpServlet {
 		}
 	}
 
+	
+	
+	
+	
 }
+
