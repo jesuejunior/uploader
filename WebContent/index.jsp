@@ -21,7 +21,7 @@
 			method="post">
 			<input class="span3" type="file" name="Selecione o arquivo"><br>
 			<input class="btn btn-success" type="submit" value="Upload">&nbsp;
-			<a href="listar.jsp" class="btn btn-primary pull-right">Listar arquivos</a>
+			<a href="listar.jsp" class="btn btn-primary pull-right">Arquivos</a>
 		</form>
 	</div>
 </body>

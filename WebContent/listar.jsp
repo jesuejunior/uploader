@@ -1,4 +1,3 @@
-<%@page import="com.sixcodes.uploader.Listar"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -6,39 +5,34 @@
 <head>
 <link href="static/css/bootstrap.min.css" rel="stylesheet">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Uploader by JesueJunior</title>
 </head>
 <body style="margin-top:60px;">
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-				<a href="#" class="brand">Uploader v1.0</a>
+				<a href="index.jsp" class="brand">Uploader v1.0</a>
 			</div>
 		</div>
 
 	</div>
-	<%@ page import="java.io.IOException"%>
-	<%@ page import="java.io.PrintWriter"%>
-	<%@ page import="java.sql.Connection"%>
-	<%@ page import="java.sql.ResultSet"%>
-	<%@ page import="java.sql.SQLException"%>
-	<%@ page import="java.sql.Statement"%>
 
-	<%@ page import="javax.servlet.ServletException"%>
-	<%@ page import="javax.servlet.http.HttpServlet"%>
-	<%@ page import="javax.servlet.http.HttpServletRequest"%>
-	<%@ page import="javax.servlet.http.HttpServletResponse"%>
-
-	<%@ page import="com.sixcodes.dao.Conectar"%>
+	<%@ page import="java.util.List"%>
+	<%@ page import="java.lang.Exception"%>
+	<%@ page import="java.io.File"%>
+	<%@page import="com.sixcodes.uploader.Upload"%>
+	<%@ page import="com.sixcodes.dao.HibernateUtil"%>
+	<%@ page import="com.sixcodes.uploader.Arquivo"%>
+	<%@ page import="com.sixcodes.uploader.Convert"%>
 
 	<%	
 	
-		Listar listar = new Listar();
-		//PrintWriter out = response.getWriter();
+		Arquivo arquivo = new Arquivo();
+		Convert convert = new Convert();
+		Upload upload = new Upload();
 
-		Connection connection = Conectar.getConnection();
 		try {
-			Statement st = connection.createStatement();
-			ResultSet nm = st.executeQuery("SELECT * FROM arquivo");
+			List<Arquivo> arquivos = HibernateUtil.listarTodos(new Arquivo());
 			out.println(" <html>");
 			out.println("<u1 class=\"nav nav-tabs nav-stacked\">");
 			out.println(" <center><h2> Lista de arquivos </h2>");
@@ -50,11 +44,12 @@
 			out.println("</center>");
 
 			// Mostra o nome e tamanho do arquivo
-			while (nm.next()) {
+			for(Arquivo a : arquivos) {
 				out.println("<center>");
 				out.println(" <tr>");
-				out.println(" <td>" + "&nbsp" + nm.getString("nome")+ "&nbsp" + "</td>");
-				out.println(" <td>"	+ "&nbsp"+ listar.convertToMb(Integer.valueOf(nm.getString("tamanho"))) + "&nbsp" + "</td>");
+				out.println(" <td>" + "&nbsp" + a.getNome() + "&nbsp" + "</td>");
+				out.println(" <td>"	+ "&nbsp"+ convert.convertToMb(a.getTamanho()) + "&nbsp" + "</td>");
+				out.println(" <td>" + "&nbsp" + "<a href= " + "'" + new File(a.getCaminho()).getAbsoluteFile().toString() + "'" + "&nbsp" + "class=\"btn btn-primary pull-right\">Download</a>" + "</td>");
 				out.println(" </tr>");
 				out.println("</center>");
 			}
@@ -64,11 +59,10 @@
 			out.println(" </table>");
 			out.println(" </html>");
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	%>
-
 </body>
 </html>
