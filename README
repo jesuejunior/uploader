@@ -1,11 +1,11 @@
 			Sistema de upload feito em java.
 
-Desenvolvido em JAVA WEB utilizando banco de dados MySQL
+Desenvolvido em JAVA WEB utilizando banco de dados PostgreSQL
 
 Funcionalidades implementadas
  * Tela para selecionar o arquivo  e fazer upload 
  * Limite de 2Gb por arquivo
- * Salva o caminho em um banco MySQL e coloca o arquivo no disco
+ * Salva o caminho em um banco PostgreSQL e coloca o arquivo no disco
  * Listagem dos arquivos e seus respectivos tamanhos
 
 
@@ -20,5 +20,6 @@ Funcionalidades em desenvolvimento
  * Implementar botões customizados e utilizaçõa de CSS
  * Implementar botão para enviar o link de download a um amigo por email
  * Cliente para fazer upload de arquivo (backup automatizado)
+ * Migrar interface para VRaptor
 
 Developed by Jesué Junior
