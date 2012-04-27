@@ -46,21 +46,19 @@ public class Upload extends HttpServlet {
 		}
 	}
 
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 	}
 
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		response.setContentType("text/plain");
 
-		//Connection connection = Conectar.getConnection(); // String de conexao
 
 		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 		/*
 		 * Colocar o tamanho maximo do arquivo para upload
 		 */
+		
 		fileItemFactory.setSizeThreshold(2048 * 1024 * 1024); // 2 GB
 		/*
 		 * Diretorio temporario do upload do arquivo.
@@ -82,8 +80,8 @@ public class Upload extends HttpServlet {
 				arquivo.setCaminho(file.getAbsolutePath());
 				arquivo.setTamanho(item.getSize());
 				
+				
 				HibernateUtil.salvarOuAtualizar(arquivo);
-				//Statement sql = connection.createStatement();
 				//sql.executeUpdate(String.format("INSERT INTO arquivo (nome,caminho,tamanho) VALUES(\"%s\", \"%s\", %d)",item.getName(), file.getAbsolutePath(),item.getSize()));
 
 				response.sendRedirect(request.getContextPath() + "/listar.jsp");

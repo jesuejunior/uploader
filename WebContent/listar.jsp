@@ -1,3 +1,4 @@
+<%@page import="java.io.FileOutputStream"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -18,6 +19,7 @@
 	</div>
 
 	<%@ page import="java.util.List"%>
+	<%@ page import="org.apache.commons.fileupload.FileItem"%>
 	<%@ page import="java.lang.Exception"%>
 	<%@ page import="java.io.File"%>
 	<%@page import="com.sixcodes.uploader.Upload"%>
@@ -49,7 +51,7 @@
 				out.println(" <tr>");
 				out.println(" <td>" + "&nbsp" + a.getNome() + "&nbsp" + "</td>");
 				out.println(" <td>"	+ "&nbsp"+ convert.convertToMb(a.getTamanho()) + "&nbsp" + "</td>");
-				out.println(" <td>" + "&nbsp" + "<a href= " + "'" + new File(a.getCaminho()).getAbsoluteFile().toString() + "'" + "&nbsp" + "class=\"btn btn-primary pull-right\">Download</a>" + "</td>");
+				out.println(" <td>" + "&nbsp" + "<a href= " + "'" + a.getCaminho()+  "'" + "&nbsp" + "class=\"btn btn-primary pull-right\">Download</a>" + "</td>");
 				out.println(" </tr>");
 				out.println("</center>");
 			}

@@ -14,15 +14,14 @@
     <servlet-name>Upload</servlet-name>
     <url-pattern>/Upload</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <description></description>
-    <display-name>Listar</display-name>
-    <servlet-name>Listar</servlet-name>
-    <servlet-class>com.sixcodes.uploader.Listar</servlet-class>
+    <display-name>Download</display-name>
+    <servlet-name>Download</servlet-name>
+    <servlet-class>com.sixcodes.uploader.Download</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Listar</servlet-name>
-    <url-pattern>/Listar</url-pattern>
+    <servlet-name>Download</servlet-name>
+    <url-pattern>/Download</url-pattern>
   </servlet-mapping>
 </web-app>
